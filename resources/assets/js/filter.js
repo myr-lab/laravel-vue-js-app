@@ -1,0 +1,9 @@
+
+//Vue moment js to show human readable date
+import moment from "moment"; //Import Moment
+
+Vue.filter("formatDate", function(date) {
+
+	return moment(date).format('MMMM Do YYYY');
+
+}); 
