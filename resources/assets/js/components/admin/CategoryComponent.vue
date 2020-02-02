@@ -22,7 +22,7 @@
    
        <button :disabled="form.busy" type="submit" class="btn btn-primary">Submit</button>
    </form>
-   {{hello}}
+
    <table class="table table-hover">
        <thead>
            <tr>
@@ -39,7 +39,9 @@
                <td>{{item.name}}</td>
                <td>{{item.created_at | formatDate}}</td>
                <td>
-                 <a href="" class="fa fa-edit"></a> | <a href="" class="fa fa-trash"></a>
+                 <router-link href="#" :to="`editcategory/${item.id}`">
+                      <i class="fa fa-edit blue"></i>
+                  </router-link> | <a href="" class="fa fa-trash" @click.prevent="deleteCategory(item.id)"></a>
                </td>
 
            </tr>
@@ -79,7 +81,44 @@
             .catch(()=>{
                 console.log('Error.....')
             })
-         }
+         },
+    deleteCategory(id) {
+
+         
+            Swal.fire({
+              title: 'Are you sure?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                
+              if (result.value) {
+                //Send Request to server
+                this.form.delete('api/category/'+id)
+                    .then((response)=> {
+                            Swal.fire(
+                              'Deleted!',
+                              'User deleted successfully',
+                              'success'
+                            )
+                    this.$store.dispatch("allCategoryFromDatabase")
+
+                    }).catch(() => {
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'Oops...',
+                          text: 'Something went wrong!',
+                          footer: '<a href>Why do I have this issue?</a>'
+                        })
+                    })
+                }
+
+            })
+          }
+       
 
        },
       computed: {
